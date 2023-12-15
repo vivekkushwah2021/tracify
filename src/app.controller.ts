@@ -42,7 +42,12 @@ export class AppController {
 
   @Get('/users')
   getAllUsers(){
+   try {
     return this.appService.getAllUsers()
+   } catch (error) {
+    console.log(error)
+    throw error
+   }
   }
 
 
