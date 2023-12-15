@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  email String
+  uid   String
+}
+
+model BookUser {
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  address             String
+  mobile              String
+  dateCreated         DateTime             @default(now())
+  updatedBy           String
+  monthlySubscription MonthlySubsription[]
+  payment             Payment[]
+}
+
+model Book {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  price              String
+  year               String
+  payment            Payment[]
+  monthlySubsription MonthlySubsription[]
+  dateCreated        DateTime             @default(now())
+}
+
+model MonthlySubsription {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  month        String
+  year         String
+  bookUser     BookUser @relation(fields: [userID], references: [id])
+  userID       String   @db.ObjectId
+  book         Book     @relation(fields: [bookID], references: [id])
+  bookID       String   @db.ObjectId
+  dateCreated  DateTime @default(now())
+  dateModified DateTime @default(now())
+}
+
+model Payment {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookUser        BookUser @relation(fields: [userID], references: [id])
+  userID          String   @db.ObjectId
+  book            Book     @relation(fields: [bookID], references: [id])
+  bookID          String   @db.ObjectId
+  isPaid          Int
+  paymentDateTime DateTime @default(now())
+}
