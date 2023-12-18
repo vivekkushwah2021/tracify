@@ -50,5 +50,15 @@ export class AppController {
    }
   }
 
+  @Get('/books')
+  getAllBooks(){
+   try {
+    return this.appService.getAllBooks()
+   } catch (error) {
+    console.log(error)
+    throw error
+   }
+  }
+
 
 }

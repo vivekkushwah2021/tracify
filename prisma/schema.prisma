@@ -26,6 +26,7 @@ model BookUser {
   updatedBy           String
   monthlySubscription MonthlySubsription[]
   payment             Payment[]
+  bookId              String[]
 }
 
 model Book {

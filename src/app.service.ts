@@ -28,7 +28,8 @@ export class AppService {
       data: {
         title: bookData.title,
         price: bookData.price,
-        year: bookData.year
+        year: bookData.year,
+        
       }
     })
     return output
@@ -119,6 +120,12 @@ export class AppService {
     console.log(temp)
 
     return output
+  }
+
+  async getAllBooks(){
+    return await this.prisma.book.findMany({
+     
+    })
   }
 
 }
