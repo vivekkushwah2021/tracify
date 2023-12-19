@@ -27,6 +27,7 @@ export class AppController {
 
   @Post('/registerBookUser')
   registerBookUser(@Body() data){
+    console.log(data)
     return this.appService.registerBookUser(data)
   }
 
