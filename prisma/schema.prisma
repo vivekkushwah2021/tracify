@@ -21,12 +21,12 @@ model BookUser {
   id                  String               @id @default(auto()) @map("_id") @db.ObjectId
   name                String
   address             String
-  mobile              String
+  phone              String
   dateCreated         DateTime             @default(now())
   updatedBy           String
   monthlySubscription MonthlySubsription[]
   payment             Payment[]
-  bookId              String[]
+  bookID              String[]
 }
 
 model Book {
