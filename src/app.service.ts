@@ -29,7 +29,7 @@ export class AppService {
         title: bookData.title,
         price: bookData.price,
         year: bookData.year,
-        
+
       }
     })
     return output
@@ -43,10 +43,29 @@ export class AppService {
   }
 
   async registerBookUser(userData) {
-    let output = await this.prisma.bookUser.create({
-      data: userData
-    })
-    return output
+
+    if (userData.bookPayment != undefined) {
+      let payment = userData.bookPayment
+      delete userData.bookPayment
+      let output = await this.prisma.bookUser.create({
+        data: userData
+      })
+
+      for (let i = 0; i < payment.length; i++) {
+        let obj = {
+          userID:output.id,
+          bookID:payment[i]
+      }
+        await this.addPayment(obj)
+      }
+
+      return output
+    } else {
+      let output = await this.prisma.bookUser.create({
+        data: userData
+      })
+      return output
+    }
   }
 
   async addMonthlySubscription(userData) {
@@ -98,33 +117,20 @@ export class AppService {
       },
     })
 
-    let userID = output.map((x => x.id))
-
-    let temp = await this.prisma.monthlySubsription.findMany({
-      select: { book: true, userID: true },
-      where: { userID: { in: userID } }
-    })
-
-    for (let i = 0; i < output.length; i++) {
-      let mIndex = temp.filter((x => x.userID == output[i].id))
-      if (mIndex.length > 0) {
-        let newData = mIndex.map((x => x.book))
-        
-        //* filter unique books and assign it to book key
-        output[i]['books'] = newData.filter((value, index, self) =>
-        self.findIndex(v => v.id === value.id) === index
-      )
-      }
-    }
-
-    console.log(temp)
-
     return output
   }
 
-  async getAllBooks(){
+  async getAllBooks() {
     return await this.prisma.book.findMany({
-     
+
+    })
+  }
+
+  async getPayment(){
+    return await this.prisma.payment.findMany({
+      include:{
+        bookUser:true,book:true
+      }
     })
   }
 

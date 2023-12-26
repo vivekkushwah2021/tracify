@@ -27,7 +27,6 @@ export class AppController {
 
   @Post('/registerBookUser')
   registerBookUser(@Body() data){
-    console.log(data)
     return this.appService.registerBookUser(data)
   }
 
@@ -55,6 +54,16 @@ export class AppController {
   getAllBooks(){
    try {
     return this.appService.getAllBooks()
+   } catch (error) {
+    console.log(error)
+    throw error
+   }
+  }
+
+  @Get('/payments')
+  getPayments(){
+   try {
+    return this.appService.getPayment()
    } catch (error) {
     console.log(error)
     throw error
